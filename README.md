@@ -1,6 +1,6 @@
 # SC4001 Part B: Chest X-ray Classification
 
-This README is the shared run guide for Part B. B1(a,b) is currently implemented; B1(c,d) and B2–B4 will be added as their experiments are completed. Run all commands from the repository root.
+This README is the shared run guide for Part B. B1 is implemented; B2–B4 will be added as their experiments are completed. Run all commands from the repository root.
 
 ## Environment and data
 
@@ -24,7 +24,13 @@ Architecture: Conv(1,16,5)–BN–ReLU–MaxPool(2), Conv(16,32,5)–BN–ReLU�
 
 All five runs use the same seed, initial weights, independently seeded shuffle generator, batch size 128, Adam defaults except learning rate, maximum 20 epochs, validation-loss early stopping with patience 4 and min_delta 1e-4. Early stopping counts epochs without a loss decrease exceeding min_delta. Each run's selected checkpoint minimizes validation classification error; ties use lower validation loss, then the earlier epoch. This rule is independent of early-stopping min_delta. Curves include every executed epoch and terminate at the actual stopping epoch.
 
-Outputs: `lr_*_history.csv` and `histories.json` contain per-epoch metrics; `summary.csv` contains the selected epoch metrics; `lr_*_best.pt` stores selected weights and preprocessing; separate validation-loss and validation-accuracy figures are provided as PDF and PNG; `run.log` records progress. Sensitivity = TP/(TP+FN); specificity = TN/(TN+FP). The test set is not read or evaluated by this script.
+Outputs: `lr_*_history.csv` and `histories.json` contain per-epoch metrics; `summary.csv` contains the selected epoch metrics; `lr_*_best.pt` stores selected weights and preprocessing; separate validation-loss and validation-accuracy figures are provided as PDF and PNG; `run.log` records progress. Sensitivity = TP/(TP+FN); specificity = TN/(TN+FP). The training mode does not read or evaluate the test set. Evaluate the validation-selected checkpoint once for B1(d):
+
+```sh
+uv run python src/train_alexnet_learning_rates.py --evaluate-only --data chestxray_binary_64.npz --output outputs/b1 --threads 6
+```
+
+This mode uses the saved training normalisation statistics and writes `test_metrics.json` and `test_metrics.csv` in `outputs/b1`.
 
 ## Report compilation
 

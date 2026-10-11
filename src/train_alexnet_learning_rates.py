@@ -9,7 +9,7 @@ import random
 from pathlib import Path
 import time
 from collections.abc import Mapping, Sequence
-from typing import TextIO, TypeAlias
+from typing import TextIO, TypeAlias, TypedDict, cast
 from numpy.typing import NDArray
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
@@ -27,6 +27,16 @@ FloatArray: TypeAlias = NDArray[np.float32]
 IntArray: TypeAlias = NDArray[np.int64]
 TensorLoader: TypeAlias = DataLoader[tuple[torch.Tensor, ...]]
 ConfigValue: TypeAlias = str | int | float | list[int]
+
+
+class Checkpoint(TypedDict):
+    model_state_dict: dict[str, torch.Tensor]
+    lr: float
+    epoch: int
+    mean: float
+    std: float
+    seed: int
+    metrics: MetricRow
 
 
 class AlexNetLike(nn.Module):
@@ -74,16 +84,55 @@ def write_csv(path: Path, rows: Sequence[Mapping[str, float | int]]) -> None:
         writer.writeheader()
         writer.writerows(rows)
 
+def evaluate_test_checkpoint(data_path: Path, out: Path) -> None:
+    """Evaluate the validation-selected model once on the held-out test set."""
+    f: TextIO
+    with (out / 'summary.csv').open(newline='') as f:
+        candidates: list[dict[str, str]] = list(csv.DictReader(f))
+    selected: dict[str, str] = min(
+        candidates, key=lambda candidate: (float(candidate['classification_error']),
+                                           float(candidate['val_loss'])))
+    lr: float = float(selected['learning_rate'])
+    checkpoint_path: Path = out / f'lr_{lr:g}_best.pt'
+    checkpoint: Checkpoint = cast(Checkpoint, torch.load(
+        checkpoint_path, map_location='cpu', weights_only=True))
+    model: AlexNetLike = AlexNetLike()
+    model.load_state_dict(checkpoint['model_state_dict'])
+    data: np.lib.npyio.NpzFile
+    with np.load(data_path) as data:
+        images: FloatArray = data['test_images'].astype(np.float32) / 255.0
+        labels: FloatArray = data['test_labels'].astype(np.float32)
+    dataset: TensorDataset = TensorDataset(
+        torch.from_numpy((images - checkpoint['mean']) / checkpoint['std']).unsqueeze(1),
+        torch.from_numpy(labels))
+    loader: TensorLoader = DataLoader(dataset, batch_size=128, shuffle=False)
+    metrics: MetricRow = evaluate(model, loader, nn.BCEWithLogitsLoss())
+    metrics['test_loss'] = metrics.pop('val_loss')
+    result: dict[str, str | float | int] = dict(
+        checkpoint=str(checkpoint_path), learning_rate=lr,
+        epoch=checkpoint['epoch'], test_count=len(dataset),
+        threshold=0.5, **metrics)
+    (out / 'test_metrics.json').write_text(json.dumps(result, indent=2) + '\n')
+    write_csv(out / 'test_metrics.csv', [dict(
+        learning_rate=lr, epoch=checkpoint['epoch'], test_count=len(dataset), **metrics)])
+    print(json.dumps(result, indent=2))
+
+
 def main() -> None:
     parser: argparse.ArgumentParser = argparse.ArgumentParser()
     parser.add_argument('--data', default='chestxray_binary_64.npz')
     parser.add_argument('--output', default='outputs/b1')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--threads', type=int, default=6)
+    parser.add_argument('--evaluate-only', action='store_true',
+                        help='evaluate the validation-selected checkpoint on the test set')
     args: argparse.Namespace = parser.parse_args()
     torch.set_num_threads(args.threads)
     out: Path = Path(args.output)
     out.mkdir(parents=True, exist_ok=True)
+    if args.evaluate_only:
+        evaluate_test_checkpoint(Path(args.data), out)
+        return
     data: np.lib.npyio.NpzFile
     with np.load(args.data) as data:
         # Only train and validation arrays are read; test data are reserved for B1(d).

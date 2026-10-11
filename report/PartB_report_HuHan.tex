@@ -87,6 +87,14 @@ The learning curves show that the model with learning rate $10^{-3}$ converges f
 Sensitivity and specificity are also needed to interpret model performance because they reflect the models’ ability to detect pneumonia cases and correctly identify healthy subjects, respectively.
 And the learning rate $10^{-3}$ has high sensitivity and specificity, proving its effectiveness in accurate detection of both categories.
 \subsection*{(d) Test Performance}
+The validation-selected checkpoint ($10^{-3}$, epoch 11) was evaluated once on 624 test images using training-set normalisation and a threshold of 0.5.
+\begin{center}\small
+\begin{tabular}{rrr}\toprule
+Accuracy (\%) & Sensitivity (\%) & Specificity (\%)\\\midrule
+87.02 & 99.49 & 66.24 \\
+\bottomrule\end{tabular}
+\end{center}
+The confusion counts were $TP=388$, $TN=155$, $FP=79$ and $FN=2$.
 
 \section*{B2}
 \subsection*{(a) VGG-like Architecture and Training}
