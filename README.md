@@ -1,15 +1,15 @@
 # SC4001 Part B: Chest X-ray Classification
 
-This README is the shared run guide for Part B. B1–B3 are implemented; B4 will be added as it is completed. Run all commands from the repository root.
+This README is the shared run guide for Part B. B1–B4 are implemented. Run all commands from the repository root.
 
 ## Environment and data
 
-Use Python 3.12 (see `.python-version`). Install the project dependencies in a local environment with `uv sync`, then run scripts with `uv run python`. This creates the project-local `.venv`; `uv.lock` records the resolved dependency versions. Subsequent work uses this project environment. Alternatively, use an existing Python environment with NumPy, PyTorch and Matplotlib installed. Place `chestxray_binary_64.npz` in the project root. The latest B1 run used the project-local environment with Python 3.12.12, PyTorch 2.14.1, NumPy 2.5.4 and Matplotlib 3.11.2 on CPU; exact settings and preprocessing statistics are recorded in `outputs/b1/config.json`.
+Use Python 3.12 (see `.python-version`). Install the project dependencies in a local environment with `uv sync`, then run scripts with `uv run python`. This creates the project-local `.venv`; `uv.lock` records the resolved dependency versions. Subsequent work uses this project environment. Alternatively, use an existing Python environment with NumPy, PyTorch, Matplotlib and Captum installed. Place `chestxray_binary_64.npz` in the project root. The latest B1 run used the project-local environment with Python 3.12.12, PyTorch 2.14.1, NumPy 2.5.4 and Matplotlib 3.11.2 on CPU; exact settings and preprocessing statistics are recorded in `outputs/b1/config.json`.
 
 ## Project layout
 
 - `src/`: experiment scripts.
-- `outputs/b1/`, `outputs/b2/` and `outputs/b3/`: experiment results, plots, checkpoints, logs and source snapshots; `outputs/` is ignored by Git.
+- `outputs/b1/`, `outputs/b2/`, `outputs/b3/` and `outputs/b4/`: experiment results, plots, checkpoints, logs and source snapshots; `outputs/` is ignored by Git.
 - `report/PartB_report_HuHan.tex`: the Part B report source.
 
 ## B1: learning-rate experiments
@@ -74,13 +74,23 @@ uv run python src/compare_model_complexity.py
 
 This reads the saved B1–B3 test metrics without repeating test evaluation. Forward hooks count convolution and linear MACs on one 1×64×64 dummy input; FLOPs = 2×MACs. BatchNorm, activations, pooling, bias additions and residual additions are excluded. All trainable parameters are counted. The comparison is saved to `outputs/b3/architecture_comparison.csv` and `.json`.
 
+## B4: Grad-CAM visualisation
+
+```sh
+uv run python -u src/generate_gradcam_overlays.py --data chestxray_binary_64.npz --output outputs/b4 --seed 42 --threads 6
+```
+
+This uses Captum and the saved checkpoints `outputs/b1/lr_0.001_best.pt`, `outputs/b2/batch_16_best.pt` and `outputs/b3/best.pt`. Run B1–B3 first. Five pneumonia test images are sampled without replacement with seed 42; the same images are used for all models. Each model is in evaluation mode and uses its checkpoint's training normalisation. Grad-CAM targets the pneumonia logit at the last main-path convolution: AlexNet `features[8]`, VGG `features[17]`, ResNet `blocks[2].branch[3]`.
+
+Positive Grad-CAM maps are bilinearly resized to 64×64, independently min–max normalised and overlaid with the jet colour map at opacity 0.4. A constant map becomes zero. For these five images, AlexNet's signed maps are entirely negative and its positive maps are zero; signed extrema are recorded in `config.json` for inspection. Colours compare locations within each image, with independent scaling across maps.
+
+`outputs/b4` contains 15 individual overlay PNGs, the 5×4 overview (`gradcam_overlays.png` and `.pdf`), raw positive maps and resized/normalised arrays (`gradcam_arrays.npz`), configuration and a source snapshot. To save the visible log, append `| tee outputs/b4/run.log` after creating the output directory. The report figure is retained at `report/figures/gradcam_overlays.png`; after regenerating overlays, copy the updated overview there to refresh the report.
+
 ## Report compilation
 
-The report embeds plot coordinates and can be compiled in the built-in LaTeX editor. With a local TeX installation, compile from the report directory:
+The report embeds training plot coordinates and loads the B4 figure from `report/figures/gradcam_overlays.png`. Keep this figure with the report source. The current built-in compiler cannot load this external figure; use the local compilation command below for the complete report. With a local TeX installation, compile from the report directory:
 
 ```sh
 cd report
 pdflatex -interaction=nonstopmode -halt-on-error PartB_report_HuHan.tex
 ```
-
-B4 run guidance will be added alongside its implementation.

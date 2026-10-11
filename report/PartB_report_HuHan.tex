@@ -82,10 +82,9 @@ $10^{-1}$ & 9 & 13 & 0.1278 & 5.15 & 96.92 & 88.89 \\
 \bottomrule\end{tabular}
 \end{center}
 \subsection*{(c) Optimal Learning Rate and Discussion}
-Optimal learning rate is $10^{-3}$ with the lowest validation error of $1.91\%$.
-The learning curves show that the model with learning rate $10^{-3}$ converges faster than other learning rates, with the best validation loss and accuracy in most of the epochs.
-Sensitivity and specificity are also needed to interpret model performance because they reflect the models’ ability to detect pneumonia cases and correctly identify healthy subjects, respectively.
-And the learning rate $10^{-3}$ has high sensitivity and specificity, proving its effectiveness in accurate detection of both categories.
+The optimal learning rate is $10^{-3}$, which achieves the lowest validation error of $1.91\%$ at epoch 11.
+It reaches high validation accuracy within a few epochs. Smaller rates converge more slowly, while larger rates show greater fluctuations.
+Sensitivity and specificity reflect the model's ability to detect pneumonia cases and correctly identify healthy subjects, respectively. The selected checkpoint achieves $97.94\%$ sensitivity and $98.52\%$ specificity on the validation set.
 \subsection*{(d) Test Performance}
 The validation-selected checkpoint ($10^{-3}$, epoch 11) was evaluated once on 624 test images using training-set normalisation and a threshold of 0.5.
 \begin{center}\small
@@ -188,9 +187,24 @@ VGG-like & Highest accuracy (88.62\%) and specificity (70.51\%); lowest paramete
 ResNet-like & Residual shortcuts support gradient flow; detects all 390 pneumonia cases. & More computation than VGG; 76 false positives and lower specificity (67.52\%).\\\bottomrule
 \end{tabular}\end{center}
 
+\newpage
 \section*{B4}
 \subsection*{(a) X-ray Selection and Grad-CAM Implementation}
+Five pneumonia test images (zero-based indices 486, 279, 413, 53 and 276) were sampled without replacement using seed 42. The selected B1--B3 checkpoints used evaluation mode and saved training normalisation. Captum's LayerGradCam targeted the pneumonia logit at the final main-path convolution:
+\[
+\alpha_k=\frac{1}{HW}\sum_{i,j}\frac{\partial z}{\partial A^k_{ij}},\qquad
+L_{\mathrm{Grad\text{-}CAM}}=\operatorname{ReLU}\!\left(\sum_k\alpha_k A^k\right).
+\]
+Here $z$ is the pneumonia logit and $A^k$ is channel $k$ of the convolutional output. AlexNet and VGG produce $16\times16$ maps; ResNet produces $8\times8$ maps. Each map was bilinearly resized to $64\times64$, min--max normalised and overlaid with opacity 0.4. Constant maps were assigned zero intensity.
 \subsection*{(b) Grad-CAM Overlays}
+\begin{center}
+\includegraphics[width=\linewidth,height=13.5cm,keepaspectratio]{figures/gradcam_overlays.png}
+
+{\footnotesize Original X-rays and pneumonia Grad-CAM overlays. Red indicates stronger positive attribution; blue indicates low or zero attribution. $p$ is the predicted pneumonia probability. Colours are scaled independently within each map.}
+\end{center}
 \subsection*{(c) Comparison and Interpretation}
+All three models classify the five images as pneumonia. AlexNet's weighted responses at the selected convolution are entirely negative, so ReLU produces zero maps despite probabilities of 0.961--1.000. This exposes a limitation of positive Grad-CAM at this layer.
+
+VGG produces smaller, scattered hotspots that overlap some brighter lower central and image-right areas in images 53 and 276. ResNet produces broader hotspots with its coarser $8\times8$ maps. Both highlight upper chest and peripheral regions in image 486. For image 413, VGG emphasises the lower central region and ResNet the mid-chest.
 
 \end{document}
