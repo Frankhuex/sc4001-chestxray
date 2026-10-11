@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.29)  11 OCT 2026 23:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.4.29)  12 OCT 2026 01:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -710,17 +710,21 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2]
-(./PartB_report_HuHan.aux)
+Underfull \hbox (badness 5985) in paragraph at lines 187--187
+[]\OT1/cmr/m/n/9 Highest ac-cu-racy (88.62%) and speci-ficity
+ []
+
+[3] [4] (./PartB_report_HuHan.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 24990 strings out of 474116
- 642572 string characters out of 5743682
- 1962187 words of memory out of 5000000
- 46976 multiletter control sequences out of 15000+600000
+ 25030 strings out of 474116
+ 643310 string characters out of 5743682
+ 1972187 words of memory out of 5000000
+ 47016 multiletter control sequences out of 15000+600000
  564687 words of font info for 62 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  84i,17n,93p,858b,2226s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -738,11 +742,12 @@ e/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2
 024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
 24/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/2024
 /texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2024/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on PartB_report_HuHan.pdf (2 pages, 188892 bytes).
+exmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2024/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb>
+Output written on PartB_report_HuHan.pdf (4 pages, 228698 bytes).
 PDF statistics:
- 89 PDF objects out of 1000 (max. 8388607)
- 54 compressed objects within 1 object stream
+ 100 PDF objects out of 1000 (max. 8388607)
+ 61 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  13 words of extra memory for PDF output out of 10000 (max. 10000000)
 

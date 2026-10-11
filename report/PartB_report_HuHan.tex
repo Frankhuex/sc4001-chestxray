@@ -19,7 +19,7 @@ I used \textbf{Codex} to assist with the generation of selected code segments du
 \textbf{Verification Method:} Manual code review, testing, debugging, and validation against assignment requirements
 
 \section*{B1}
-\subsection*{(a) Validation Loss and Accuracy Curve for Each Learning Rate}
+\subsection*{(a) Validation Loss and Accuracy Curves for Different Learning Rates}
 \begin{center}
 \begin{tikzpicture}
 \begin{axis}[width=0.85\linewidth,height=4.4cm,
@@ -97,15 +97,96 @@ Accuracy (\%) & Sensitivity (\%) & Specificity (\%)\\\midrule
 The confusion counts were $TP=388$, $TN=155$, $FP=79$ and $FN=2$.
 
 \section*{B2}
-\subsection*{(a) VGG-like Architecture and Training}
-\subsection*{(b) Validation Curves and Batch Size Comparison}
+\subsection*{(a) Validation Loss and Accuracy Curves for Different Batch Sizes}
+\begin{center}\begin{tikzpicture}
+\begin{axis}[width=0.85\linewidth,height=4.4cm,
+title={Validation loss},ylabel={Binary cross-entropy loss},
+xlabel={Epoch},xmin=1,xmax=20,xtick={1,5,10,15,20},
+tick label style={font=\scriptsize},label style={font=\scriptsize},
+title style={font=\footnotesize},legend style={font=\scriptsize,legend columns=3},
+legend pos=north east,grid=major]
+\addplot[blue,mark=*,mark size=0.8pt] coordinates {(1,0.22399477) (2,0.19475876) (3,0.21218541) (4,0.14687538) (5,0.09251639) (6,0.08298518) (7,0.15771136) (8,0.14444409) (9,0.05900501) (10,0.06114033) (11,0.10769530) (12,0.05163637) (13,0.05700687) (14,0.06463481) (15,0.10446516) (16,0.06320658)};\addlegendentry{16}
+\addplot[orange,mark=*,mark size=0.8pt] coordinates {(1,0.18765550) (2,0.22411376) (3,0.11422044) (4,0.09656048) (5,0.09099347) (6,0.65772021) (7,0.09349165) (8,0.08624141) (9,0.07327663) (10,0.11252377) (11,0.10881413) (12,0.06799494) (13,0.11291238) (14,0.08963978) (15,0.06339990) (16,0.07286898) (17,0.08381078) (18,0.05723351) (19,0.08669770) (20,0.40540391)};\addlegendentry{32}
+\addplot[green!60!black,mark=*,mark size=0.8pt] coordinates {(1,0.22253833) (2,0.41122492) (3,0.17694993) (4,0.15814817) (5,0.11447491) (6,0.10224307) (7,0.30321121) (8,0.11044373) (9,0.22220439) (10,0.31948733)};\addlegendentry{64}
+\addplot[red,mark=*,mark size=0.8pt] coordinates {(1,0.67443280) (2,0.26106216) (3,0.19934895) (4,0.24267823) (5,0.13313902) (6,0.14152265) (7,0.15231249) (8,0.31985458) (9,0.11792996) (10,0.14970073) (11,0.11436540) (12,0.09806942) (13,0.29648196) (14,0.08817028) (15,0.07223396) (16,0.08664557) (17,0.13410556) (18,0.11949194) (19,0.16823948)};\addlegendentry{128}
+\addplot[purple,mark=*,mark size=0.8pt] coordinates {(1,0.62156999) (2,0.60478958) (3,0.26468719) (4,0.23987878) (5,0.17838315) (6,0.15215804) (7,0.16899227) (8,0.13565806) (9,0.15668067) (10,0.11910351) (11,0.15775989) (12,0.12636844) (13,0.14789015) (14,0.10788533) (15,0.09459504) (16,0.08675098) (17,0.17516314) (18,0.10532957) (19,0.11018485) (20,0.10101934)};\addlegendentry{256}
+\end{axis}\end{tikzpicture}\end{center}
+\begin{center}\begin{tikzpicture}
+\begin{axis}[width=0.85\linewidth,height=4.4cm,
+title={Validation accuracy},ylabel={Accuracy},
+xlabel={Epoch},xmin=1,xmax=20,xtick={1,5,10,15,20},
+tick label style={font=\scriptsize},label style={font=\scriptsize},
+title style={font=\footnotesize},legend style={font=\scriptsize,legend columns=3},
+legend pos=south east,grid=major]
+\addplot[blue,mark=*,mark size=0.8pt] coordinates {(1,0.90648855) (2,0.92175573) (3,0.92366412) (4,0.95419847) (5,0.96946565) (6,0.96564885) (7,0.93511450) (8,0.94083969) (9,0.98091603) (10,0.97709924) (11,0.95992366) (12,0.98091603) (13,0.98091603) (14,0.96755725) (15,0.96183206) (16,0.97900763)};\addlegendentry{16}
+\addplot[orange,mark=*,mark size=0.8pt] coordinates {(1,0.93320611) (2,0.90839695) (3,0.95801527) (4,0.96564885) (5,0.96183206) (6,0.76717557) (7,0.96564885) (8,0.96564885) (9,0.97328244) (10,0.95419847) (11,0.96183206) (12,0.97137405) (13,0.95992366) (14,0.96946565) (15,0.97709924) (16,0.97137405) (17,0.97328244) (18,0.98091603) (19,0.96946565) (20,0.87595420)};\addlegendentry{32}
+\addplot[green!60!black,mark=*,mark size=0.8pt] coordinates {(1,0.90648855) (2,0.82633588) (3,0.93320611) (4,0.94465649) (5,0.95610687) (6,0.96374046) (7,0.87213740) (8,0.96374046) (9,0.91030534) (10,0.87022901)};\addlegendentry{64}
+\addplot[red,mark=*,mark size=0.8pt] coordinates {(1,0.74236641) (2,0.89885496) (3,0.93511450) (4,0.90648855) (5,0.95419847) (6,0.93893130) (7,0.93702290) (8,0.86450382) (9,0.96564885) (10,0.94465649) (11,0.95229008) (12,0.95610687) (13,0.89122137) (14,0.96755725) (15,0.97519084) (16,0.96946565) (17,0.95229008) (18,0.96183206) (19,0.92938931)};\addlegendentry{128}
+\addplot[purple,mark=*,mark size=0.8pt] coordinates {(1,0.74236641) (2,0.74236641) (3,0.87595420) (4,0.89503817) (5,0.93511450) (6,0.94274809) (7,0.94083969) (8,0.95038168) (9,0.94083969) (10,0.95801527) (11,0.94274809) (12,0.95992366) (13,0.94847328) (14,0.95419847) (15,0.96564885) (16,0.97137405) (17,0.93702290) (18,0.96374046) (19,0.95992366) (20,0.96374046)};\addlegendentry{256}
+\end{axis}\end{tikzpicture}\end{center}
+\subsection*{(b) Batch Size Comparison Table}
+Metrics follow B1(b). Each row uses the lowest-error checkpoint, with ties resolved by lower validation loss and then earlier epoch.
+\begin{center}\small
+\begin{tabular}{rrrrrrr}\toprule
+Batch size & Best epoch & Epochs run & Val. loss & Error (\%) & Sens. (\%) & Spec. (\%)\\\midrule
+16 & 12 & 16 & 0.0516 & 1.91 & 98.20 & 97.78 \\
+32 & 18 & 20 & 0.0572 & 1.91 & 98.97 & 95.56 \\
+64 & 6 & 10 & 0.1022 & 3.63 & 97.43 & 93.33 \\
+128 & 15 & 19 & 0.0722 & 2.48 & 98.97 & 93.33 \\
+256 & 16 & 20 & 0.0868 & 2.86 & 98.20 & 94.07 \\
+\bottomrule\end{tabular}\end{center}
 \subsection*{(c) Optimal Batch Size and Discussion}
+Batch sizes 16 and 32 share the lowest validation error of $1.91\%$. 
+We choose batch size 16 as the optimal one because its validation loss is lower (0.0516 versus 0.0572), and it has a more balanced sensitivity and specificity. 
 \subsection*{(d) Test Performance}
+The selected batch-size-16 checkpoint (epoch 12) was evaluated once on 624 test images using training-set normalisation and a threshold of 0.5.
+\begin{center}\small
+\begin{tabular}{rrr}\toprule
+Accuracy (\%) & Sensitivity (\%) & Specificity (\%)\\\midrule
+88.62 & 99.49 & 70.51 \\
+\bottomrule\end{tabular}\end{center}
+The confusion counts were $TP=388$, $TN=165$, $FP=69$ and $FN=2$.
 
 \section*{B3}
-\subsection*{(a) ResNet-like Architecture and Training}
-\subsection*{(b) Model Performance}
-\subsection*{(c) Architecture Comparison and Discussion}
+\subsection*{(a) Model Performance}
+The ResNet-like model used learning rate $10^{-3}$, batch size 16 and seed 42, with the same preprocessing and early-stopping rules as B1--B2. 
+Training stopped at epoch 14.
+\begin{center}\begin{tikzpicture}
+\begin{axis}[width=0.85\linewidth,height=4.4cm,title={ResNet training curves},xlabel={Epoch},ylabel={Binary cross-entropy loss},xmin=1,xmax=14,xtick={1,4,7,10,14},tick label style={font=\scriptsize},label style={font=\scriptsize},title style={font=\footnotesize},legend style={font=\scriptsize},legend pos=north east,grid=major]
+\addplot[blue,mark=*,mark size=0.8pt] coordinates {(1,0.21782696) (2,0.14174779) (3,0.11542360) (4,0.08856453) (5,0.08158770) (6,0.06916582) (7,0.07087379) (8,0.05954929) (9,0.05255913) (10,0.04348097) (11,0.02727422) (12,0.04366518) (13,0.03047914) (14,0.02240843)};\addlegendentry{Training}
+\addplot[orange,mark=*,mark size=0.8pt] coordinates {(1,0.18595025) (2,0.16609057) (3,0.13221718) (4,0.10800737) (5,0.08942838) (6,0.08017301) (7,0.19680219) (8,0.09990025) (9,0.08200375) (10,0.06728197) (11,0.13399633) (12,0.08396705) (13,0.08238726) (14,0.09627098)};\addlegendentry{Validation}
+\addplot[gray,dashed] coordinates {(10,0) (10,0.23)};\addlegendentry{Selected epoch}
+\end{axis}\end{tikzpicture}\end{center}
+The lowest-validation-error checkpoint (epoch 10) was evaluated once on 624 test images with a threshold of 0.5.
+\begin{center}\small
+\begin{tabular}{rrr}\toprule
+Accuracy (\%) & Sensitivity (\%) & Specificity (\%)\\\midrule
+87.82 & 100.00 & 67.52 \\
+\bottomrule\end{tabular}\end{center}
+The confusion counts were $TP=390$, $TN=158$, $FP=76$ and $FN=0$.
+\subsection*{(b) Comparison and Discussion}
+\begin{center}\small
+\begin{tabular}{lrrrrrr}\toprule
+Model & Acc. (\%) & Sens. (\%) & Spec. (\%) & Error (\%) & Parameters & MFLOPs\\\midrule
+AlexNet-like & 87.02 & 99.49 & 66.24 & 12.98 & 99,569 & 39.06 \\
+VGG-like & 88.62 & 99.49 & 70.51 & 11.38 & 18,185 & 19.46 \\
+ResNet-like & 87.82 & 100.00 & 67.52 & 12.18 & 77,169 & 25.30 \\
+\bottomrule\end{tabular}\end{center}
+Parameters include all trainable weights and biases. FLOPs measure convolutional and fully connected computation per $1\times64\times64$ image, counting each multiply--accumulate as two operations.
+
+\textbf{AlexNet-like:} Its $5\times5$ kernels provide larger local receptive fields. The fully connected head contributes to the highest parameter count, and the model has the highest FLOPs and lowest test accuracy and specificity.
+
+\textbf{VGG-like:} Stacked $3\times3$ convolutions add nonlinear transformations, and global average pooling keeps the classifier compact. It achieves the highest accuracy and specificity with the fewest parameters and FLOPs. Global pooling trades spatial detail for compactness; the model produces 69 false positives.
+
+\textbf{ResNet-like:} Residual shortcuts provide direct gradient paths that can ease optimisation. The model detects all 390 pneumonia cases and produces 76 false positives. VGG offers higher accuracy and specificity at lower computational cost.
+
+\begin{center}\small
+\begin{tabular}{@{}p{0.16\linewidth}p{0.39\linewidth}p{0.39\linewidth}@{}}\toprule
+Model & Pros & Cons\\\midrule
+AlexNet-like & Larger local receptive fields from $5\times5$ kernels; high sensitivity (99.49\%). & Highest parameter count and FLOPs; lowest specificity (66.24\%).\\[3pt]
+VGG-like & Highest accuracy (88.62\%) and specificity (70.51\%); lowest parameter count and FLOPs. & Global pooling compresses spatial detail; 69 false positives.\\[3pt]
+ResNet-like & Residual shortcuts support gradient flow; detects all 390 pneumonia cases. & More computation than VGG; 76 false positives and lower specificity (67.52\%).\\\bottomrule
+\end{tabular}\end{center}
 
 \section*{B4}
 \subsection*{(a) X-ray Selection and Grad-CAM Implementation}
